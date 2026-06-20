@@ -1461,16 +1461,30 @@ body {
   body {
     width: 210mm;
     height: 297mm;
-    overflow: hidden;
     margin: 0;
     padding: 0;
+    overflow: hidden;
   }
 
-  .certificate-editor,
-  .sidebar,
+  .editor-panel,
   .controls,
+  .sidebar,
+  .toolbar,
   .buttons {
     display: none !important;
+  }
+
+  .preview-panel,
+  .preview-scroller {
+    width: 210mm !important;
+    height: 297mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background: none !important;
   }
 
   @page {
@@ -1478,20 +1492,14 @@ body {
     margin: 0;
   }
 
-  .certificate {
-    page-break-after: avoid;
-    page-break-inside: avoid;
-    break-inside: avoid;
-    width: 210mm !important;
-    height: 297mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
+  #certificate,
   .cert-container {
-    width: 210mm !important;
-    height: 297mm !important;
-    max-width: 100% !important;
+    width: 100%;
+    height: 100%;
+    max-width: none !important;
+    max-height: none !important;
+    transform: none !important;
+    zoom: 1 !important;
     box-shadow: none !important;
     position: relative;
     page-break-after: avoid;
@@ -1499,7 +1507,5 @@ body {
     break-inside: avoid;
     margin: 0 !important;
     padding: 0 !important;
-    top: 0 !important;
-    left: 0 !important;
   }
 }

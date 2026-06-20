@@ -406,6 +406,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // --- Dynamic Print Scaling ---
+  window.addEventListener('beforeprint', () => {
+    // Determine strict printable area that ensures 95-100% coverage
+    // Safe margins subtract a bit from true A4 (794x1123)
+    const printableWidth = 760; 
+    const printableHeight = 1075;
+    
+    const certWidth = certificate.offsetWidth || 794;
+    const certHeight = certificate.offsetHeight || 1123;
+    
+    const scaleX = printableWidth / certWidth;
+    const scaleY = printableHeight / certHeight;
+    const scale = Math.min(scaleX, scaleY);
+    
+    scaleWrapper.style.transform = `scale(${scale})`;
+    scaleWrapper.style.transformOrigin = 'center center';
+  });
+
+  window.addEventListener('afterprint', () => {
+    // Restore normal preview scaling
+    scaleWrapper.style.transformOrigin = 'top center';
+    adjustPreviewScale();
+  });
+
   // --- Print Command ---
   btnPrint.addEventListener('click', () => {
     if (!validateFields()) return;
