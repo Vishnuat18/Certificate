@@ -296,6 +296,7 @@ body {
   transition: transform 0.1s ease-out;
 }
 
+.certificate,
 .cert-container {
   width: 800px;
   height: 1131px;
@@ -306,7 +307,7 @@ body {
       transparent 60%),
     #ffffff;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: var(--shadow-premium);
   box-sizing: border-box;
   color: var(--primary-navy);
@@ -315,7 +316,7 @@ body {
 /* --- Certificate Borders --- */
 .cert-border-outer {
   position: absolute;
-  inset: 15px;
+  inset: 20px;
   border: 1px solid var(--primary-gold);
   opacity: 0.55;
   pointer-events: none;
@@ -324,7 +325,7 @@ body {
 
 .cert-border-inner {
   position: absolute;
-  inset: 24px;
+  inset: 28px;
   border: 1.5px solid var(--primary-gold);
   pointer-events: none;
   z-index: 5;
@@ -876,8 +877,8 @@ body {
 /* --- Corner Ribbon SVGs --- */
 .corner-ribbon-tl {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 20px;
+  left: 20px;
   width: 260px;
   height: 260px;
   pointer-events: none;
@@ -885,8 +886,8 @@ body {
 
 .corner-ribbon-br {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 20px;
+  right: 20px;
   width: 260px;
   height: 260px;
   pointer-events: none;
@@ -1131,11 +1132,11 @@ body {
   background-color: #ffffff;
   border: 1.5px solid var(--primary-gold);
   border-radius: 25px;
-  padding: 6px 18px;
+  padding: 8px 24px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-width: 190px;
+  gap: 12px;
+  min-width: 250px;
   justify-content: center;
   z-index: 2;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);

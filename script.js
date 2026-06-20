@@ -292,8 +292,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Hide shadow boundary lines during capture
     certificate.style.boxShadow = 'none';
     
-    // Give DOM browser layout engine 150ms to register style adjustments
-    setTimeout(() => {
+    // Helper to wait for all image loads
+    const waitForImages = () => {
+      const images = certificate.querySelectorAll('img');
+      const promises = Array.from(images).map(img => {
+        if (img.complete) return Promise.resolve();
+        return new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
+        });
+      });
+      return Promise.all(promises);
+    };
+
+    // Give DOM browser layout engine 150ms and wait for fonts/images to register style adjustments
+    setTimeout(async () => {
+      try {
+        if (document.fonts) {
+          await document.fonts.ready;
+        }
+        await waitForImages();
+      } catch (e) {
+        console.warn('Asset loading warning:', e);
+      }
       callback(() => {
         // Restore styling after output completion
         scaleWrapper.style.transform = originalTransform;
@@ -311,8 +332,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!validateFields()) return;
     prepareCapture((restoreCallback) => {
       html2canvas(certificate, {
-        scale: 3, // 3x density render for ultra-clear vectors & text
+        scale: 4, // 4x density render for ultra-clear vectors & text
         useCORS: true,
+        allowTaint: true,
+        imageTimeout: 0,
         backgroundColor: '#ffffff',
         logging: false
       }).then(canvas => {
@@ -336,8 +359,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!validateFields()) return;
     prepareCapture((restoreCallback) => {
       html2canvas(certificate, {
-        scale: 3, // HQ scaling
+        scale: 4, // 4x density render
         useCORS: true,
+        allowTaint: true,
+        imageTimeout: 0,
         backgroundColor: '#ffffff',
         logging: false
       }).then(canvas => {
