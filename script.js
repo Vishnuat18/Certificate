@@ -99,6 +99,19 @@ document.addEventListener('DOMContentLoaded', () => {
     updateView(); // Initialize view text on load
   };
 
+  // Prefill defaults if empty or not set on load (prevents browser session state caching)
+  if (!inputName.value) inputName.value = "Vishnu R";
+  if (!selectCourse.value) selectCourse.value = "WEB DEVELOPMENT INTERNSHIP";
+  if (!inputCourse.value) inputCourse.value = "WEB DEVELOPMENT INTERNSHIP";
+  if (!inputStartDate.value) inputStartDate.value = "2026-06-08";
+  if (!inputEndDate.value) inputEndDate.value = "2026-06-18";
+  if (!inputDuration.value) inputDuration.value = "10 DAYS";
+  if (!selectDomain.value) selectDomain.value = "WEB DEVELOPMENT";
+  if (!inputDomain.value) inputDomain.value = "WEB DEVELOPMENT";
+  if (!inputIssueDate.value) inputIssueDate.value = "2026-06-20";
+  if (!inputCertId.value) inputCertId.value = "AT/INT/2026/0101";
+  if (!inputVerifyUrl.value) inputVerifyUrl.value = "aroxtech.com/veify";
+
   // Bind individual inputs to their preview segments with placeholders
   syncInput(inputName, viewName, '[Candidate Name]');
   syncInput(inputCourse, viewCourse, '[Internship/Course Title]');
@@ -337,7 +350,13 @@ document.addEventListener('DOMContentLoaded', () => {
         allowTaint: true,
         imageTimeout: 0,
         backgroundColor: '#ffffff',
-        logging: false
+        logging: false,
+        width: 800,
+        height: 1131,
+        windowWidth: 800,
+        windowHeight: 1131,
+        scrollX: 0,
+        scrollY: 0
       }).then(canvas => {
         const link = document.createElement('a');
         const formattedName = inputName.value.trim().toLowerCase().replace(/\s+/g, '_');
@@ -364,7 +383,13 @@ document.addEventListener('DOMContentLoaded', () => {
         allowTaint: true,
         imageTimeout: 0,
         backgroundColor: '#ffffff',
-        logging: false
+        logging: false,
+        width: 800,
+        height: 1131,
+        windowWidth: 800,
+        windowHeight: 1131,
+        scrollX: 0,
+        scrollY: 0
       }).then(canvas => {
         const imgData = canvas.toDataURL('image/png', 1.0);
         
