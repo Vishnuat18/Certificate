@@ -304,6 +304,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // 2. Hide shadow boundary lines during capture
     certificate.style.boxShadow = 'none';
+
+    // 3. Fix html2canvas rendering bug for absolute bottom/right coordinates
+    const elBr = document.querySelector('.corner-ribbon-br');
+    const elBl = document.querySelector('.corner-bracket-bl');
+    const elBlDbl = document.querySelector('.corner-bracket-bl-double');
+    const elTr = document.querySelector('.corner-bracket-tr');
+    const elTrDbl = document.querySelector('.corner-bracket-tr-double');
+    const origCss = {
+      br: elBr ? elBr.style.cssText : '',
+      bl: elBl ? elBl.style.cssText : '',
+      blDbl: elBlDbl ? elBlDbl.style.cssText : '',
+      tr: elTr ? elTr.style.cssText : '',
+      trDbl: elTrDbl ? elTrDbl.style.cssText : ''
+    };
+
+    if (elBr) elBr.style.cssText += 'bottom: auto !important; right: auto !important; top: 851px !important; left: 520px !important;';
+    if (elBl) elBl.style.cssText += 'bottom: auto !important; left: 38px !important; top: 1033px !important;';
+    if (elBlDbl) elBlDbl.style.cssText += 'bottom: auto !important; left: 33px !important; top: 1028px !important;';
+    if (elTr) elTr.style.cssText += 'top: 38px !important; right: auto !important; left: 702px !important;';
+    if (elTrDbl) elTrDbl.style.cssText += 'top: 33px !important; right: auto !important; left: 697px !important;';
     
     // Helper to wait for all image loads
     const waitForImages = () => {
@@ -336,6 +356,11 @@ document.addEventListener('DOMContentLoaded', () => {
           scroller.style.width = originalScrollerWidth;
           scroller.style.height = originalScrollerHeight;
         }
+        if (elBr) elBr.style.cssText = origCss.br;
+        if (elBl) elBl.style.cssText = origCss.bl;
+        if (elBlDbl) elBlDbl.style.cssText = origCss.blDbl;
+        if (elTr) elTr.style.cssText = origCss.tr;
+        if (elTrDbl) elTrDbl.style.cssText = origCss.trDbl;
       });
     }, 150);
   }

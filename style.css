@@ -1489,7 +1489,8 @@ body {
   .cert-container {
     width: 800px !important;
     height: 1131px !important;
-    max-width: 100% !important;
+    transform: scale(0.96) !important;
+    transform-origin: top center !important;
     box-shadow: none !important;
     position: relative;
     page-break-after: avoid;
