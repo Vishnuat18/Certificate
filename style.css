@@ -298,8 +298,9 @@ body {
 
 .certificate,
 .cert-container {
-  width: 210mm;
-  height: 297mm;
+  width: 794px;
+  height: 1123px;
+  /* Exact A4 pixel dimensions at 96 DPI */
   background:
     radial-gradient(circle at center,
       rgba(212, 175, 55, 0.04),
@@ -876,8 +877,8 @@ body {
 /* --- Corner Ribbon SVGs --- */
 .corner-ribbon-tl {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 15px;
+  left: 15px;
   width: 260px;
   height: 260px;
   pointer-events: none;
@@ -885,8 +886,8 @@ body {
 
 .corner-ribbon-br {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 15px;
+  right: 15px;
   width: 260px;
   height: 260px;
   pointer-events: none;
@@ -1465,30 +1466,26 @@ body {
     padding: 0;
   }
 
-  .editor-panel {
+  .certificate-editor,
+  .sidebar,
+  .controls,
+  .buttons {
     display: none !important;
-  }
-
-  .preview-panel {
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
-    display: block !important;
-    background: none !important;
-  }
-
-  .preview-scroller {
-    display: block !important;
-    min-height: auto !important;
-  }
-
-  .cert-scale-wrapper {
-    transform: none !important;
   }
 
   @page {
     size: A4 portrait;
     margin: 0;
+  }
+
+  .certificate {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .cert-container {

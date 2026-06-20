@@ -374,12 +374,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!validateFields()) return;
     prepareCapture((restoreCallback) => {
       html2canvas(certificate, {
-        scale: 4, // 4x density render
+        scale: 4,
+        backgroundColor: "#ffffff",
         useCORS: true,
         allowTaint: true,
-        imageTimeout: 0,
-        backgroundColor: '#ffffff',
-        logging: false
+        logging: false,
+        imageTimeout: 0
       }).then(canvas => {
         const imgData = canvas.toDataURL('image/png', 1.0);
         
@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
           format: 'a4'
         });
         
-        // A4 pages are exactly 210mm x 297mm
+        // Exactly fill 210mm x 297mm
         pdf.addImage(imgData, 'PNG', 0, 0, 210, 297, undefined, 'FAST');
         
         const formattedName = inputName.value.trim().toLowerCase().replace(/\s+/g, '_');
