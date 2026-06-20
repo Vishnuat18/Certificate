@@ -307,7 +307,7 @@ body {
       transparent 60%),
     #ffffff;
   position: relative;
-  overflow: hidden;
+  overflow: visible !important;
   box-shadow: var(--shadow-premium);
   box-sizing: border-box;
   color: var(--primary-navy);
@@ -347,24 +347,24 @@ body {
 
 .cs-tr {
   top: -3.5px;
-  right: -3.5px;
+  left: 733.5px;
 }
 
 .cs-bl {
-  bottom: -3.5px;
+  top: 1062.5px;
   left: -3.5px;
 }
 
 .cs-br {
-  bottom: -3.5px;
-  right: -3.5px;
+  top: 1062.5px;
+  left: 733.5px;
 }
 
 /* --- Additional Corner Bracket Accents --- */
 .corner-bracket-tr {
   position: absolute;
   top: 38px;
-  right: 38px;
+  left: 696px;
   width: 60px;
   height: 60px;
   border-top: 1.5px solid var(--primary-gold);
@@ -376,7 +376,7 @@ body {
 .corner-bracket-tr-double {
   position: absolute;
   top: 33px;
-  right: 33px;
+  left: 691px;
   width: 70px;
   height: 70px;
   border-top: 1px solid var(--primary-gold);
@@ -387,7 +387,7 @@ body {
 
 .corner-bracket-bl {
   position: absolute;
-  bottom: 38px;
+  top: 1025px;
   left: 38px;
   width: 60px;
   height: 60px;
@@ -399,7 +399,7 @@ body {
 
 .corner-bracket-bl-double {
   position: absolute;
-  bottom: 33px;
+  top: 1020px;
   left: 33px;
   width: 70px;
   height: 70px;

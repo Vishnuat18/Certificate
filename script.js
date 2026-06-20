@@ -346,7 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
   btnDownloadPng.addEventListener('click', () => {
     if (!validateFields()) return;
     prepareCapture((restoreCallback) => {
-      html2canvas(certificate, {
+      const exportWrapper = document.getElementById('certificate-export-wrapper') || certificate;
+      html2canvas(exportWrapper, {
         scale: 4, // 4x density render for ultra-clear vectors & text
         useCORS: true,
         allowTaint: true,
@@ -373,7 +374,8 @@ document.addEventListener('DOMContentLoaded', () => {
   btnDownloadPdf.addEventListener('click', () => {
     if (!validateFields()) return;
     prepareCapture((restoreCallback) => {
-      html2canvas(certificate, {
+      const exportWrapper = document.getElementById('certificate-export-wrapper') || certificate;
+      html2canvas(exportWrapper, {
         scale: 4,
         backgroundColor: "#ffffff",
         useCORS: true,
