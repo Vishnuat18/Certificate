@@ -42,13 +42,14 @@
       <!-- Candidate Name -->
       <div class="form-group">
         <label for="inputName">Candidate Name</label>
-        <input type="text" id="inputName" placeholder="e.g. Padmapriya V" value="Padmapriya V">
+        <input type="text" id="inputName" placeholder="Enter Candidate Name" value="">
       </div>
 
       <!-- Internship/Course Name -->
       <div class="form-group">
         <label for="selectCourse">Internship/Course Title</label>
         <select id="selectCourse">
+          <option value="" disabled selected>Select Internship Title</option>
           <option value="WEB DEVELOPMENT INTERNSHIP">Web Development Internship</option>
           <option value="APP DEVELOPMENT INTERNSHIP">App Development Internship</option>
           <option value="DATA SCIENCE INTERNSHIP">Data Science Internship</option>
@@ -56,18 +57,18 @@
           <option value="CYBERSECURITY INTERNSHIP">Cybersecurity Internship</option>
           <option value="other">Other (Custom)</option>
         </select>
-        <input type="text" id="inputCourse" class="custom-input-hidden" placeholder="Enter custom Internship Title" value="WEB DEVELOPMENT INTERNSHIP">
+        <input type="text" id="inputCourse" class="custom-input-hidden" placeholder="Enter custom Internship Title" value="">
       </div>
 
       <!-- Dates Row -->
       <div class="form-row">
         <div class="form-group">
           <label for="inputStartDate">Start Date</label>
-          <input type="date" id="inputStartDate" value="2026-06-08">
+          <input type="date" id="inputStartDate" value="">
         </div>
         <div class="form-group">
           <label for="inputEndDate">End Date</label>
-          <input type="date" id="inputEndDate" value="2026-06-18">
+          <input type="date" id="inputEndDate" value="">
         </div>
       </div>
 
@@ -75,11 +76,12 @@
       <div class="form-row">
         <div class="form-group">
           <label for="inputDuration">Duration</label>
-          <input type="text" id="inputDuration" placeholder="30 DAYS" value="30 DAYS">
+          <input type="text" id="inputDuration" placeholder="Enter Duration (e.g. 30 DAYS)" value="">
         </div>
         <div class="form-group">
           <label for="selectDomain">Domain</label>
           <select id="selectDomain">
+            <option value="" disabled selected>Select Domain</option>
             <option value="WEB DEVELOPMENT">Web Development</option>
             <option value="MOBILE APP DEVELOPMENT">Mobile App Development</option>
             <option value="DATA SCIENCE">Data Science</option>
@@ -87,21 +89,21 @@
             <option value="CYBERSECURITY">Cybersecurity</option>
             <option value="other">Other (Custom)</option>
           </select>
-          <input type="text" id="inputDomain" class="custom-input-hidden" placeholder="Enter custom Domain" value="WEB DEVELOPMENT">
+          <input type="text" id="inputDomain" class="custom-input-hidden" placeholder="Enter custom Domain" value="">
         </div>
       </div>
 
       <!-- Date of Issue -->
       <div class="form-group">
         <label for="inputIssueDate">Date of Issue</label>
-        <input type="date" id="inputIssueDate" value="2024-06-01">
+        <input type="date" id="inputIssueDate" value="">
       </div>
 
       <!-- Certificate ID (Auto-generatable) -->
       <div class="form-group">
         <label for="inputCertId">Certificate ID</label>
         <div class="input-with-action">
-          <input type="text" id="inputCertId" placeholder="AT/INT/2026/0101" value="AT/INT/2026/0101">
+          <input type="text" id="inputCertId" placeholder="Enter Certificate ID (e.g. AT/INT/2026/0101)" value="">
           <button type="button" id="btnGenId">Auto Gen</button>
         </div>
       </div>
@@ -109,10 +111,7 @@
       <!-- Verification URL -->
       <div class="form-group">
         <label for="inputVerifyUrl">Verification URL</label>
-        <div class="input-with-action">
-          <input type="text" id="inputVerifyUrl" placeholder="aroxtech.com/verify" value="aroxtech.com/verify">
-          <button type="button" id="btnRegenQr">Regenerate QR Code</button>
-        </div>
+        <input type="text" id="inputVerifyUrl" placeholder="Enter Verification URL (e.g. aroxtech.com/verify)" value="">
       </div>
 
       <!-- Appreciation Paragraph -->
@@ -521,35 +520,9 @@
                 <div class="sig-company">Arox Tech</div>
               </div>
 
-              <!-- Gold Seal & QR Badge -->
+              <!-- Verification Seal Container -->
               <div class="seal-badge-container">
-                <!-- SVG Leaf wreath behind -->
-                <svg class="seal-wreath-svg" viewBox="0 0 100 100">
-                  <path d="M 50,90 Q 25,85 20,50 Q 20,20 40,10" fill="none" stroke="currentColor" stroke-width="2" />
-                  <path d="M 22,75 Q 12,70 18,65 Q 24,68 22,75" fill="currentColor" />
-                  <path d="M 20,60 Q 8,56 15,50 Q 22,52 20,60" fill="currentColor" />
-                  <path d="M 21,45 Q 10,38 18,34 Q 25,37 21,45" fill="currentColor" />
-                  <path d="M 27,30 Q 18,22 25,20 Q 31,23 27,30" fill="currentColor" />
-                  <path d="M 36,18 Q 30,10 37,10 Q 42,13 36,18" fill="currentColor" />
-                  
-                  <path d="M 50,90 Q 75,85 80,50 Q 80,20 60,10" fill="none" stroke="currentColor" stroke-width="2" />
-                  <path d="M 78,75 Q 88,70 82,65 Q 76,68 78,75" fill="currentColor" />
-                  <path d="M 80,60 Q 92,56 85,50 Q 78,52 80,60" fill="currentColor" />
-                  <path d="M 79,45 Q 90,38 82,34 Q 75,37 79,45" fill="currentColor" />
-                  <path d="M 73,30 Q 82,22 75,20 Q 69,23 73,30" fill="currentColor" />
-                  <path d="M 64,18 Q 70,10 63,10 Q 58,13 64,18" fill="currentColor" />
-                </svg>
-
-                <div class="gold-seal-wreath">
-                  <div class="seal-bg-circle"></div>
-                  <div class="seal-dashed-border"></div>
-                  <div class="seal-inner-navy">
-                    <!-- Dynamic QR Code Container -->
-                    <div class="seal-qr-wrapper" id="qrContainer"></div>
-                  </div>
-                </div>
-                <!-- Ribbon Drape under badge -->
-                <div class="seal-ribbon-drape"></div>
+                <img id="certVerifySeal" src="assets/qr_with_badge.png" class="verification-seal-img" alt="Verification Seal">
               </div>
 
               <!-- Training Head Signature block -->
@@ -566,7 +539,7 @@
             <!-- Footer Overlay (Badge ID & Verification URL) -->
             <div class="cert-footer-overlay">
               <!-- Rounded navy ID badge -->
-              <div class="cert-id-badge" id="viewCertId">AT/INT/2026/0101</div>
+              <div class="cert-id-badge" id="viewCertId">[Certificate ID]</div>
               <!-- Verify URL text & Globe Icon -->
               <div class="cert-verify-link">
                 <!-- Globe Icon SVG -->

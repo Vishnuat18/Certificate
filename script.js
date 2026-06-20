@@ -1,10 +1,10 @@
 /* ==========================================================================
    Certificate Generator Business Logic
-   Implements live bindings, dynamic QR code rendering, scaling, and PDF/PNG exports.
+   Implements live bindings, custom inputs, native date formatting,
+   form validation alerts, scale previewing, and PDF/PNG exports.
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-  let qrcode = null;
 
   // --- HTML Elements Cache ---
   const scaleWrapper = document.getElementById('certScaleWrapper');
@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const inputLogo = document.getElementById('inputLogo');
   const certLogo = document.getElementById('certLogo');
-  const btnRegenQr = document.getElementById('btnRegenQr');
 
   const btnGenId = document.getElementById('btnGenId');
   const btnDownloadPdf = document.getElementById('btnDownloadPdf');
@@ -54,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ==========================================================================
      DATE FORMATTING UTILITY
+     Converts native YYYY-MM-DD to DD MONTH YYYY in uppercase format
      ========================================================================== */
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -74,21 +74,24 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   /* ==========================================================================
-     PREVIEW LIVE SYNCING: Event Listeners
+     PREVIEW LIVE SYNCING: Event Listeners & Binding Helpers
      ========================================================================== */
   
-  // Direct text bindings
-  const syncInput = (inputEl, viewEl, callback = null) => {
-    inputEl.addEventListener('input', (e) => {
-      viewEl.textContent = e.target.value;
-      if (callback) callback(e.target.value);
-    });
+  // Direct text inputs syncing helper
+  const syncInput = (inputEl, viewEl, placeholderText, callback = null) => {
+    const updateView = () => {
+      viewEl.textContent = inputEl.value.trim() || placeholderText;
+      if (callback) callback(inputEl.value);
+    };
+    inputEl.addEventListener('input', updateView);
+    updateView(); // Initialize view text on load
   };
 
   // Helper to sync date input values with formatted output
-  const syncDateInput = (inputEl, viewEl, callback = null) => {
+  const syncDateInput = (inputEl, viewEl, placeholderText, callback = null) => {
     const updateView = () => {
-      viewEl.textContent = formatDate(inputEl.value);
+      const formatted = formatDate(inputEl.value);
+      viewEl.textContent = formatted || placeholderText;
       if (callback) callback(inputEl.value);
     };
     inputEl.addEventListener('input', updateView);
@@ -96,34 +99,43 @@ document.addEventListener('DOMContentLoaded', () => {
     updateView(); // Initialize view text on load
   };
 
-  syncInput(inputName, viewName, () => updateQRCode());
-  syncInput(inputCourse, viewCourse, () => updateQRCode());
-  syncDateInput(inputStartDate, viewStartDate);
-  syncDateInput(inputEndDate, viewEndDate);
-  syncInput(inputDuration, viewDuration);
-  syncInput(inputDomain, viewDomain);
-  syncDateInput(inputIssueDate, viewIssueDate);
-  syncInput(inputCertId, viewCertId, () => updateQRCode());
+  // Bind individual inputs to their preview segments with placeholders
+  syncInput(inputName, viewName, '[Candidate Name]');
+  syncInput(inputCourse, viewCourse, '[Internship/Course Title]');
+  syncDateInput(inputStartDate, viewStartDate, '[Start Date]');
+  syncDateInput(inputEndDate, viewEndDate, '[End Date]');
+  syncInput(inputDuration, viewDuration, '[Duration]');
+  syncInput(inputDomain, viewDomain, '[Domain]');
+  syncDateInput(inputIssueDate, viewIssueDate, '[Date of Issue]');
+  syncInput(inputCertId, viewCertId, '[Certificate ID]');
 
-  // Handle selects dropdown logic
+  // Handle selects dropdown toggle & sync logic for Course Title
   const handleCourseChange = () => {
     if (selectCourse.value === 'other') {
       inputCourse.style.display = 'block';
-      viewCourse.textContent = inputCourse.value;
+      viewCourse.textContent = inputCourse.value.trim() || '[Internship/Course Title]';
+    } else if (selectCourse.value === '') {
+      inputCourse.style.display = 'none';
+      inputCourse.value = '';
+      viewCourse.textContent = '[Internship/Course Title]';
     } else {
       inputCourse.style.display = 'none';
       inputCourse.value = selectCourse.value;
       viewCourse.textContent = selectCourse.value;
     }
-    updateQRCode();
   };
   selectCourse.addEventListener('change', handleCourseChange);
   handleCourseChange(); // Trigger on load
 
+  // Handle selects dropdown toggle & sync logic for Domain
   const handleDomainChange = () => {
     if (selectDomain.value === 'other') {
       inputDomain.style.display = 'block';
-      viewDomain.textContent = inputDomain.value;
+      viewDomain.textContent = inputDomain.value.trim() || '[Domain]';
+    } else if (selectDomain.value === '') {
+      inputDomain.style.display = 'none';
+      inputDomain.value = '';
+      viewDomain.textContent = '[Domain]';
     } else {
       inputDomain.style.display = 'none';
       inputDomain.value = selectDomain.value;
@@ -135,18 +147,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Sync description (converting newlines to HTML line breaks)
   const syncDescription = () => {
-    viewDescription.innerHTML = inputDescription.value.replace(/\n/g, '<br>');
+    const defaultText = "During this internship, he/she was found to be dedicated,\nenthusiastic and hardworking.\nWe wish him/her all the best for future endeavors.";
+    const textVal = inputDescription.value.trim() || defaultText;
+    viewDescription.innerHTML = textVal.replace(/\n/g, '<br>');
   };
   inputDescription.addEventListener('input', syncDescription);
   syncDescription(); // Initial sync on load
 
-  // Sync verification URL and trigger QR code regeneration
+  // Sync verification URL to the preview link
   inputVerifyUrl.addEventListener('input', (e) => {
     const urlVal = e.target.value.trim();
     const finalUrl = urlVal.startsWith('http') ? urlVal : (urlVal ? `https://${urlVal}` : '');
-    viewVerifyUrl.textContent = finalUrl || 'https://aroxtech.com/verify';
-    updateQRCode();
+    viewVerifyUrl.textContent = finalUrl || '[Verification URL]';
   });
+  // Initialize on load
+  const initialUrl = inputVerifyUrl.value.trim();
+  viewVerifyUrl.textContent = initialUrl ? (initialUrl.startsWith('http') ? initialUrl : `https://${initialUrl}`) : '[Verification URL]';
 
   // --- Company Logo Upload Handler ---
   inputLogo.addEventListener('change', (e) => {
@@ -155,88 +171,71 @@ document.addEventListener('DOMContentLoaded', () => {
       const reader = new FileReader();
       reader.onload = (event) => {
         certLogo.src = event.target.result;
-        const certWatermarkLogo = document.getElementById('certWatermarkLogo');
-        if (certWatermarkLogo) {
-          certWatermarkLogo.src = event.target.result;
-        }
       };
       reader.readAsDataURL(file);
     }
   });
 
-  // Handle manual QR code regeneration button
-  btnRegenQr.addEventListener('click', () => {
-    updateQRCode();
-  });
-
   /* ==========================================================================
-     QR CODE GENERATION
+     FORM VALIDATION PIPELINE
+     Checks for missing values and pops up alert dialogue to focus missing inputs
      ========================================================================== */
-  function updateQRCode() {
-    const qrContainer = document.getElementById('qrContainer');
-    if (!qrContainer) return;
-    
-    // Clear old QR code canvas
-    qrContainer.innerHTML = '';
-    
-    const certIdVal = inputCertId.value.trim();
-    const nameVal = inputName.value.trim();
-    const courseVal = inputCourse.value.trim();
-    const urlVal = inputVerifyUrl.value.trim();
-    
-    let qrContent = '';
-    if (urlVal) {
-      const finalUrl = urlVal.startsWith('http') ? urlVal : `https://${urlVal}`;
-      qrContent = JSON.stringify({
-        certificateId: certIdVal,
-        candidateName: nameVal,
-        internshipTitle: courseVal,
-        verificationURL: finalUrl
-      });
-    } else {
-      qrContent = certIdVal;
+  function validateFields() {
+    // Check dropdowns first
+    if (selectCourse.value === '') {
+      alert('Please select an Internship Title!');
+      selectCourse.focus();
+      return false;
+    }
+    if (selectCourse.value === 'other' && !inputCourse.value.trim()) {
+      alert('Please enter a custom Internship Title!');
+      inputCourse.focus();
+      return false;
     }
 
-    try {
-      // Create QRCode.js instance with high resolution and error correction
-      qrcode = new QRCode(qrContainer, {
-        text: qrContent,
-        width: 256,
-        height: 256,
-        colorDark: '#000000', // Black
-        colorLight: '#ffffff', // White
-        correctLevel: QRCode.CorrectLevel.H // High error correction
-      });
-
-      // Add center logo overlay
-      const centerLogo = document.createElement('img');
-      centerLogo.src = 'assets/qr logo.png';
-      centerLogo.className = 'qr-center-logo';
-      centerLogo.onerror = () => {
-        centerLogo.style.display = 'none';
-      };
-      qrContainer.appendChild(centerLogo);
-    } catch (err) {
-      console.error('Failed to create QR code: ', err);
+    if (selectDomain.value === '') {
+      alert('Please select a Domain!');
+      selectDomain.focus();
+      return false;
     }
+    if (selectDomain.value === 'other' && !inputDomain.value.trim()) {
+      alert('Please enter a custom Domain!');
+      inputDomain.focus();
+      return false;
+    }
+
+    const requiredFields = [
+      { input: inputName, name: 'Candidate Name' },
+      { input: inputDuration, name: 'Duration' },
+      { input: inputStartDate, name: 'Start Date' },
+      { input: inputEndDate, name: 'End Date' },
+      { input: inputIssueDate, name: 'Date of Issue' },
+      { input: inputCertId, name: 'Certificate ID' },
+      { input: inputVerifyUrl, name: 'Verification URL' }
+    ];
+
+    for (const field of requiredFields) {
+      if (!field.input.value.trim()) {
+        alert(`Please enter a valid ${field.name}!`);
+        field.input.focus();
+        return false;
+      }
+    }
+
+    return true;
   }
-
-  // Initial QR code setup
-  updateQRCode();
 
   /* ==========================================================================
      AUTO-GENERATE UNIQUE CERTIFICATE ID
      ========================================================================== */
   btnGenId.addEventListener('click', () => {
     const year = 2026;
-    // Pad sequence to 4 digits (random between 1 and 9999)
     const randNum = Math.floor(Math.random() * 10000);
     const sequence = String(randNum).padStart(4, '0');
     const randomizedId = `AT/INT/${year}/${sequence}`;
     
     inputCertId.value = randomizedId;
     viewCertId.textContent = randomizedId;
-    updateQRCode();
   });
 
   /* ==========================================================================
@@ -309,6 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- PNG Download (HQ) ---
   btnDownloadPng.addEventListener('click', () => {
+    if (!validateFields()) return;
     prepareCapture((restoreCallback) => {
       html2canvas(certificate, {
         scale: 3, // 3x density render for ultra-clear vectors & text
@@ -333,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- PDF Download (HQ A4 Portrait) ---
   btnDownloadPdf.addEventListener('click', () => {
+    if (!validateFields()) return;
     prepareCapture((restoreCallback) => {
       html2canvas(certificate, {
         scale: 3, // HQ scaling
@@ -367,6 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Print Command ---
   btnPrint.addEventListener('click', () => {
+    if (!validateFields()) return;
     window.print();
   });
 });
