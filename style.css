@@ -298,16 +298,15 @@ body {
 
 .certificate,
 .cert-container {
-  width: 800px;
-  height: 1131px;
-  /* A4 aspect ratio 1:1.4137 */
+  width: 210mm;
+  height: 297mm;
   background:
     radial-gradient(circle at center,
       rgba(212, 175, 55, 0.04),
       transparent 60%),
     #ffffff;
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   box-shadow: var(--shadow-premium);
   box-sizing: border-box;
   color: var(--primary-navy);
@@ -877,8 +876,8 @@ body {
 /* --- Corner Ribbon SVGs --- */
 .corner-ribbon-tl {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 0px;
+  left: 0px;
   width: 260px;
   height: 260px;
   pointer-events: none;
@@ -886,8 +885,8 @@ body {
 
 .corner-ribbon-br {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 5px;
+  right: 5px;
   width: 260px;
   height: 260px;
   pointer-events: none;
@@ -1457,12 +1456,13 @@ body {
    PRINT FRIENDLY MEDIA QUERIES
    ========================================================================== */
 @media print {
-
-  /* Hide the entire editor and browser backgrounds */
+  html,
   body {
-    background-color: #ffffff;
-    height: auto;
-    overflow: visible;
+    width: 210mm;
+    height: 297mm;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
   }
 
   .editor-panel {
@@ -1472,7 +1472,7 @@ body {
   .preview-panel {
     padding: 0 !important;
     margin: 0 !important;
-    overflow: visible !important;
+    overflow: hidden !important;
     display: block !important;
     background: none !important;
   }
@@ -1486,23 +1486,23 @@ body {
     transform: none !important;
   }
 
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
   .cert-container {
-    width: 800px !important;
-    height: 1131px !important;
-    transform: scale(0.96) !important;
-    transform-origin: top center !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-width: 100% !important;
     box-shadow: none !important;
     position: relative;
     page-break-after: avoid;
     page-break-inside: avoid;
-    margin: 0 auto !important;
+    break-inside: avoid;
+    margin: 0 !important;
     padding: 0 !important;
     top: 0 !important;
     left: 0 !important;
-  }
-
-  @page {
-    size: A4 portrait;
-    margin: 0;
   }
 }

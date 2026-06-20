@@ -261,9 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const availableWidth = previewPanel.clientWidth - margin;
     const availableHeight = previewPanel.clientHeight - margin;
     
-    // Certificate container original dimensions: 800px x 1131px
-    const widthScale = availableWidth / 800;
-    const heightScale = availableHeight / 1131;
+    // Certificate container dimensions
+    const certWidth = certificate.offsetWidth || 794;
+    const certHeight = certificate.offsetHeight || 1123;
+    const widthScale = availableWidth / certWidth;
+    const heightScale = availableHeight / certHeight;
     
     // Limit maximum scale factor to 1.0 to keep it sharp
     const scaleFactor = Math.min(widthScale, heightScale, 1.0);
@@ -273,8 +275,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fit preview scroller size to scaled boundary
     const scroller = scaleWrapper.parentElement;
     if (scroller) {
-      scroller.style.width = `${800 * scaleFactor}px`;
-      scroller.style.height = `${1131 * scaleFactor}px`;
+      scroller.style.width = `${certWidth * scaleFactor}px`;
+      scroller.style.height = `${certHeight * scaleFactor}px`;
     }
   }
 
@@ -296,35 +298,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const originalScrollerWidth = scroller ? scroller.style.width : '';
     const originalScrollerHeight = scroller ? scroller.style.height : '';
     
-    // 1. Reset scale to 1 to render canvas elements at 100% resolution (800x1131)
+    // 1. Reset scale to 1 to render canvas elements at 100% resolution
     scaleWrapper.style.transform = 'none';
     if (scroller) {
-      scroller.style.width = '800px';
-      scroller.style.height = '1131px';
+      scroller.style.width = `${certificate.offsetWidth}px`;
+      scroller.style.height = `${certificate.offsetHeight}px`;
     }
     // 2. Hide shadow boundary lines during capture
     certificate.style.boxShadow = 'none';
 
-    // 3. Fix html2canvas rendering bug for absolute bottom/right coordinates
-    const elBr = document.querySelector('.corner-ribbon-br');
-    const elBl = document.querySelector('.corner-bracket-bl');
-    const elBlDbl = document.querySelector('.corner-bracket-bl-double');
-    const elTr = document.querySelector('.corner-bracket-tr');
-    const elTrDbl = document.querySelector('.corner-bracket-tr-double');
-    const origCss = {
-      br: elBr ? elBr.style.cssText : '',
-      bl: elBl ? elBl.style.cssText : '',
-      blDbl: elBlDbl ? elBlDbl.style.cssText : '',
-      tr: elTr ? elTr.style.cssText : '',
-      trDbl: elTrDbl ? elTrDbl.style.cssText : ''
-    };
-
-    if (elBr) elBr.style.cssText += 'bottom: auto !important; right: auto !important; top: 851px !important; left: 520px !important;';
-    if (elBl) elBl.style.cssText += 'bottom: auto !important; left: 38px !important; top: 1033px !important;';
-    if (elBlDbl) elBlDbl.style.cssText += 'bottom: auto !important; left: 33px !important; top: 1028px !important;';
-    if (elTr) elTr.style.cssText += 'top: 38px !important; right: auto !important; left: 702px !important;';
-    if (elTrDbl) elTrDbl.style.cssText += 'top: 33px !important; right: auto !important; left: 697px !important;';
-    
     // Helper to wait for all image loads
     const waitForImages = () => {
       const images = certificate.querySelectorAll('img');
@@ -356,11 +338,6 @@ document.addEventListener('DOMContentLoaded', () => {
           scroller.style.width = originalScrollerWidth;
           scroller.style.height = originalScrollerHeight;
         }
-        if (elBr) elBr.style.cssText = origCss.br;
-        if (elBl) elBl.style.cssText = origCss.bl;
-        if (elBlDbl) elBlDbl.style.cssText = origCss.blDbl;
-        if (elTr) elTr.style.cssText = origCss.tr;
-        if (elTrDbl) elTrDbl.style.cssText = origCss.trDbl;
       });
     }, 150);
   }
@@ -375,13 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allowTaint: true,
         imageTimeout: 0,
         backgroundColor: '#ffffff',
-        logging: false,
-        width: 800,
-        height: 1131,
-        windowWidth: 800,
-        windowHeight: 1131,
-        scrollX: 0,
-        scrollY: 0
+        logging: false
       }).then(canvas => {
         const link = document.createElement('a');
         const formattedName = inputName.value.trim().toLowerCase().replace(/\s+/g, '_');
@@ -408,13 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allowTaint: true,
         imageTimeout: 0,
         backgroundColor: '#ffffff',
-        logging: false,
-        width: 800,
-        height: 1131,
-        windowWidth: 800,
-        windowHeight: 1131,
-        scrollX: 0,
-        scrollY: 0
+        logging: false
       }).then(canvas => {
         const imgData = canvas.toDataURL('image/png', 1.0);
         
